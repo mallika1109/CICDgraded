@@ -11,9 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create build
+      - name: Simulate a build
         run: |
-          echo "Release build v1" > release.txt
+          echo "Build complete" > build.log
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2

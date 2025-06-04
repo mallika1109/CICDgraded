@@ -23,3 +23,6 @@ jobs:
           tag_name: main-$(date +%s)
           name: "Main Branch Auto Release"
           body: "Auto release from main branch."
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}

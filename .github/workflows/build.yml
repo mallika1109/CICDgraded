@@ -37,8 +37,8 @@ jobs:
         id: create_releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.0
-          name: Release v2.0.0
+          tag_name: v3.0.0
+          name: Release v3.0.0
           body: "Automated release with build log."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
       - name: Upload artifact as release asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.0  # Make sure tag matches!
+          tag_name: v3.0.0  # Make sure tag matches!
           files: build.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

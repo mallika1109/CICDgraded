@@ -1,36 +1,17 @@
-name: Release Build
-
-on:
-  push:
-    tags:
-      - 'v*'  #e.g., v1.0, v1.1
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Simulate a build
-        run: |
-          echo "Build complete" > build.log
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs
-          path: build.log
-
-      - name: Create GitHub release
+- name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: v1.0.0
+          name: Release v1.0.0
+          body: "Automated release with build log."
         env:
           GITHUB_TOKEN: ${{ secrets.secret_artifact }}
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: release.txt
+          tag_name: v1.0.1
+          files: build.log
         env:
           GITHUB_TOKEN: ${{ secrets.secret_artifact }}

@@ -15,6 +15,12 @@ jobs:
         run: |
           echo "Build complete" > build.log
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: build.log
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:

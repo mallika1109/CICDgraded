@@ -16,13 +16,20 @@ jobs:
       - name: Simulate build
         run: echo "Build complete at $(date)" > build.log
 
-      - name: Create Release (with dynamic tag)
+      - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: main-$(date +%s)
-          name: "Main Branch Auto Release"
-          body: "Auto release from main branch."
+          name: "Auto Release from Main"
+          body: "This is an automated release from the main branch."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.create_release.outputs.tag_name }}
+          files: build.log
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}

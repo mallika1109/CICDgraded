@@ -5,22 +5,17 @@ on:
     branches: [main]
 
 permissions:
-  contents: write  # Required to create a release
+  contents: write  # Required for creating releases
 
 jobs:
-  artifact-demo:
+  release-job:
     runs-on: ubuntu-latest
-    outputs:
-      timestamp: ${{ steps.get-time.outputs.timestamp }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get timestamp
-        id: get-time
-        run: echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-
       - name: Simulate a build
-        run: echo "Build complete on $(date)" > build.log
+        run: echo "Build complete at $(date)" > build.log
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -29,32 +24,24 @@ jobs:
           path: build.log
           retention-days: 30
 
-  release:
-    needs: artifact-demo
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-logs
+      - name: Generate unique tag
+        id: generate_tag
+        run: echo "tag_name=release-$(date +%s)" >> $GITHUB_ENV
 
       - name: Create GitHub release
-        id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: release-${{ needs.artifact-demo.outputs.timestamp }}
-          name: Release ${{ needs.artifact-demo.outputs.timestamp }}
+          tag_name: ${{ env.tag_name }}
+          name: Release ${{ env.tag_name }}
           body: |
-            Build completed and released automatically.
+            Automated release with unique timestamp-based tag.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifact as release asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: release-${{ needs.artifact-demo.outputs.timestamp }}
+          tag_name: ${{ env.tag_name }}
           files: build.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
